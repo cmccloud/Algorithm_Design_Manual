@@ -83,55 +83,14 @@ BST.prototype.delete = function (value) {
     }
 };
 
-
-// functional attempt
-
-var BSTF = function (value, parent, left, right) {
-    return [value, parent, left, right];
+BST.prototype.traverse = function (f) {
+    if (this.left) this.left.traverse(f);
+    f(this.value);
+    if (this.right) this.right.traverse(f);
 };
 
-var getValue = function (tree) { return tree [0]; };
-var getParent = function (tree) { return tree [1]; };
-var leftBranch = function (tree) { return tree [2]; };
-var rightBranch = function (tree) { return tree [3]; };
-var search = function (tree, target) {
-    if (! tree) return null;
-    if (getValue(tree) === target) return tree;
-    if (target > getValue(tree)) return search(rightBranch(tree));
-    if (target <= getValue(tree)) return search(leftBranch(tree));
-    else return console.log("error in search");
-};
-var insert = function (tree, parent, value) {
-    if (! tree) return BST(value, parent);
-    return value > getValue(tree) ?
-        BST (getValue(tree),
-             getParent(tree),
-             leftBranch(tree),
-             insert(rightBranch(tree), tree, value)) :
-        BST (getValue(tree),
-             getParent(tree),
-             insert(leftBranch(tree), tree, value),
-             rightBranch(tree));
-};
-var max = function (tree) {
-    return rightBranch(tree) ? max (rightBranch(tree)) :
-        tree;
-};
-var min = function (tree) {
-    return leftBranch(tree) ? min (leftBranch(tree)) :
-        tree;
-};
-
-var replace = function (tree, target, replacement) {
-    if (! tree) return null;
-    if (getValue(tree) === target) return replacement;
-    return target > getValue(tree) ?
-        BST (getValue(tree),
-             getParent(tree),
-             leftBranch(tree),
-             replace(rightBranch(tree), target, replacement)) :
-        BST (getValue (tree),
-             getParent(tree),
-             replace(leftBranch(tree), target, replacement),
-             rightBranch(tree));
+BST.prototype.flatten = function () {
+    var flat = [];
+    this.traverse ((x) => flat.push(x));
+    return flat;
 };
